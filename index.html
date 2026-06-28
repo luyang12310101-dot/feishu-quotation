@@ -245,12 +245,14 @@ body{
   </div>
 
   <div class="cmp-sec" id="cmpSec">
-    <h3>全版本对比</h3>
-    <div class="cmp-tabs">
-      <button class="on" onclick="setTab('diff')">只看差异</button>
-      <button onclick="setTab('all')">全部功能</button>
+    <h3 onclick="toggleCmp()">全版本对比 <span id="cmpArrow" style="font-size:12px;color:var(--text3)">▼</span></h3>
+    <div id="cmpBody">
+      <div class="cmp-tabs">
+        <button class="on" onclick="setTab('diff')">只看差异</button>
+        <button onclick="setTab('all')">全部功能</button>
+      </div>
+      <div class="cmp-scroll" id="cmpScroll"></div>
     </div>
-    <div class="cmp-scroll" id="cmpScroll"></div>
   </div>
 
   <div class="disc">
@@ -1923,7 +1925,7 @@ const PREV={biz_std:'free',biz_pro:'biz_std',biz_prem:'biz_pro',ent_std:'biz_pre
 const AI_KEYS=['ai_basic','ai_ent','ai_ent_plus','ai_flagship'];
 const AI_PREV={ai_ent:'ai_basic',ai_ent_plus:'ai_ent',ai_flagship:'ai_ent_plus'};
 
-let S={people:0,sel:null,aiSel:'ai_basic',aiQty:1,tab:'diff',featOpen:false};
+let S={people:0,sel:null,aiSel:'ai_basic',aiQty:1,tab:'diff',featOpen:false,cmpOpen:false};
 
 // ========== INIT ==========
 function init(){
@@ -2068,6 +2070,7 @@ function renderDiff(){
 
 // ========== FEATURES ==========
 function toggleFeat(){S.featOpen=!S.featOpen;document.getElementById('featArrow').textContent=S.featOpen?'▲':'▼';document.getElementById('featBody').style.display=S.featOpen?'block':'none';}
+function toggleCmp(){S.cmpOpen=!S.cmpOpen;document.getElementById('cmpArrow').textContent=S.cmpOpen?'▲':'▼';document.getElementById('cmpBody').style.display=S.cmpOpen?'block':'none';}
 function renderFeat(){
   const v=V[S.sel];
   let h='';
@@ -2097,6 +2100,8 @@ function renderCmpTable(){
   for(const[cat,items]of Object.entries(diffCats)){h+=`<tr><td colspan="8" style="background:#f8f9fb;padding:5px 10px;font-size:10px;font-weight:700;color:var(--text3);text-align:left;letter-spacing:.5px">${cat}</td></tr>`;for(const[key,vals]of Object.entries(items)){h+=`<tr><td style="font-size:12px">${key}</td>`;cols.forEach(k=>{const val=vals[k]||'—';const vcls=val==='✓'||val==='✅'||val.includes('✓')||val.includes('✅')?'yes':(val==='✗'||val==='❌'||val==='❌')?'no':'num';h+=`<td class="${vcls}">${val}</td>`;});h+='</tr>';}}
   h+='</tbody></table>';
   document.getElementById('cmpScroll').innerHTML=h;
+  document.getElementById('cmpBody').style.display='none';
+  document.getElementById('cmpArrow').textContent='▼';
 }
 
 function fmt(n){return n.toLocaleString('zh-CN')}
